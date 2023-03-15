@@ -1,24 +1,39 @@
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight
+}
 
 // create the base application object containing the scene, renderer, and camera
 let app = {
   el: document.getElementById("app"),
   scene: null,
   renderer: null,
-  camera: null
+  camera: null,
+  controls:null
 }
 
 // initialize the application and THREE.js scene renderer
 const init = () => {
   app.renderer = new THREE.WebGLRenderer({alpha: true});
   app.renderer.setSize ( window.innerWidth, window.innerHeight);
-  app.renderer.setClearColor(0x424242, 1)
-  app.el.appendChild (app.renderer.domElement);
+  app.renderer.setClearColor(0x00000, 1) //0x424242
+
+  document.body.appendChild(app.renderer.domElement);
+
   app.scene = new THREE.Scene();  
-  app.scene.background = new THREE.Color( 0x424242 );
+  //app.scene.background = new THREE.Color( 0x000000 );
+
   app.camera =  new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
   app.camera.position.z = 3;
   app.camera.position.y = 1;
+
+  
+  // controls 
+  app.controls = new OrbitControls( app.camera, app.renderer.domElement );
+  app.controls.enableDamping = true;
 
 };
 
@@ -180,10 +195,49 @@ function createCricle(){
 
 }
 
+function createSpotLight(){
+
+  const spotLight = new THREE.SpotLight( 0xffffff );
+  spotLight.position.set( 10, 10, 10 );
+
+  spotLight.map = new THREE.TextureLoader().load();
+
+  spotLight.castShadow = true;
+
+  spotLight.shadow.mapSize.width = 1024;
+  spotLight.shadow.mapSize.height = 1024;
+
+  spotLight.shadow.camera.near = 500;
+  spotLight.shadow.camera.far = 4000;
+  spotLight.shadow.camera.fov = 20;
+
+  const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+  
+
+ // spotLight.target = app.scene;
+  app.scene.add( spotLightHelper );
+  app.scene.add( spotLight );
+  
+
+}
+
+function createDirectionalLight(){
+  const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  app.scene.add( directionalLight );
+}
+
 let clock = new THREE.Clock();
 let delta = 0;
 // set frame rate to 30 fps
 let interval = 1 / 60;
+
+
+window.addEventListener('resize', () =>{
+  app.camera.aspect = window.innerWidth / window.innerHeight;
+  app.camera.updateProjectionMatrix();
+  app.renderer.setSize( window.innerWidth, window.innerHeight );
+});
+
 
 const update = () => {
   
@@ -193,10 +247,9 @@ const update = () => {
  
   if(delta > interval) {
     
-    app.renderer.setClearColor( 0x000000, 1 );
-
     //updateParticles();
-    
+
+    app.controls.update();
     app.renderer.render(app.scene, app.camera);
     
   }
@@ -208,6 +261,10 @@ function main(){
   init();
   //createBox();
   createParticle();
+
+  //createSpotLight();
+  createDirectionalLight();
+
   //createCricle();
   update();
 
