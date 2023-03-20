@@ -87,13 +87,14 @@ const updateCube = () => {
 
 const particles = []
 const particleGoalMap = new Map();
-const PARTICLE_COUNT = 5;
+const PARTICLE_COUNT = 1;
 const PARTICLE_SPEED = 0.01;
 
 
 function getRandomNumberFromRange(min, max) {
   return Math.random() * (max - min) + min;
 }
+
 
 
 const createParticle = () => { 
@@ -128,35 +129,57 @@ const createParticle = () => {
   
 };
 
+// check if the particle has reached its goal position
+// return true if the particle has reached its goal position
+// return false if the particle has not reached its goal position
 function isParticleGoalReached(pos, goal){
-  // check if the particle has reached its goal position
-  // return true if the particle has reached its goal position
-  // return false if the particle has not reached its goal position
+
   console.log("Distance to goal: " + pos.distanceTo(goal));
   return pos.distanceTo(goal) < 0.5;
-
 
 }
 
 function moveParticleToGoal(particle){
   // get the current position of the particle
   const currentPos = particle.position;
+
   const goal = particleGoalMap.get(particle); // get the goal position of the particle
  
- 
+  const distance = currentPos.distanceTo(goal);
+  
+  //let step = PARTICLE_SPEED * delta;
 
-  console.log("Distance to goal: " + currentPos.distanceTo(goal));
+  const desired = currentPos.sub(goal);
+
+  let movementVector = desired.normalize();
+
+  return movementVector;
+
+  //particle.position += movementVector;
+  //particle.position.x +=1;
 
   
+
+  //const movementVector = new THREE.Vector3(desired.x, desired.y, desired.z) //* PARTICLE_SPEED;
+  //console.log("multi scalar:")
+  //console.log( movementVector.multiplyScalar(1.5));
+
+  //const newPosition = currentPos.add(movementVector);
+
+  //createGoalParticle(newPosition.x, newPosition.y, newPosition.z);
+  
+  /*
   if(!isParticleGoalReached(currentPos, goal)){
 
-
-
     // update the particle's position by adding the vector to the current position
-    //let step = PARTICLE_SPEED * delta;
+    let step = PARTICLE_SPEED * delta;
+
+    const desired = currentPos.sub(goal);
+    desired.normalize();
     
-    //const movementVector = new THREE.Vector3(goal.x, goal.y, goal.z) * step;
-   
+    const movementVector = new THREE.Vector3(desired.x, desired.y, desired.z) * step;
+    
+
     //particle.position.add(movementVector);
 
 
@@ -164,10 +187,12 @@ function moveParticleToGoal(particle){
 
     // select a new goal position for the particle
     console.log("setting new goal")
-    //const newGoal = chooseGoal(currentPos);
-    //particleGoalMap.set(particle, newGoal);
+    const newGoal = createRnadomGoal(currentPos);
+    particleGoalMap.set(particle, newGoal);
 
   }
+
+  */
   
 
 
@@ -177,30 +202,77 @@ const GOAL_DISTANCE_LENGTH = 2.5;
 
 function chooseStartGoal(currentPos) {
   const vectorPostion = new THREE.Vector3(currentPos[0], currentPos[1], currentPos[2])
-  
-  //TODO: vector math for random goal
 
-  const goal = vectorPostion;
-  
-  console.log(goal)
+  vectorPostion.x += GOAL_DISTANCE_LENGTH;
+  vectorPostion.y += GOAL_DISTANCE_LENGTH;
+
+  /*
+  const randomSeed = Math.random();
+  console.log(randomSeed);
+
+  if(randomSeed < 0.25){
+
+    vectorPostion.x += GOAL_DISTANCE_LENGTH;
+    vectorPostion.y += GOAL_DISTANCE_LENGTH;
+    //vectorPostion.x += 0.5;
 
 
-  //const goal = new THREE.Vector3(1,1,1)
+  } else if(randomSeed < 0.5){
+    vectorPostion.x -= GOAL_DISTANCE_LENGTH;
+    vectorPostion.y -= GOAL_DISTANCE_LENGTH;
+    //vectorPostion.x -= 0.5;
 
+  }
+    */
+
+  const goal = new THREE.Vector3(vectorPostion.x, vectorPostion.y, vectorPostion.z);
+  createGoalParticle(goal.x, goal.y, goal.z); // create a particle to represent the goal position for testing
   return goal; //  return the goal position
 
 
 }
 
 
-function chooseGoal(currentPos) {
+const createRnadomGoal = (vectorPostion) => {
 
-  //const goal = new THREE.Vector3(1,1,1)
+  const randomSeed = Math.random();
+  console.log(randomSeed);
 
-  return goal; //  return the goal position
+  if(randomSeed < 0.25){
+
+    vectorPostion.x += GOAL_DISTANCE_LENGTH;
+    vectorPostion.y += GOAL_DISTANCE_LENGTH;
+    //vectorPostion.x += 0.5;
+
+
+  } else if(randomSeed < 0.5){
+    vectorPostion.x -= GOAL_DISTANCE_LENGTH;
+    vectorPostion.y -= GOAL_DISTANCE_LENGTH;
+    //vectorPostion.x -= 0.5;
+
+  }
+
+  return new THREE.Vector3(vectorPostion.x, vectorPostion.y, vectorPostion.z); //  return the goal position
 
 
 }
+
+const createGoalParticle = (x,y,z) => {
+  const positions = new Float32Array( [ -1.0, 1.0,  1.0,] );
+  const particleGeometry = new THREE.BufferGeometry();
+  const particleMaterial = new THREE.PointsMaterial( { color: "red", size: 0.05 } );
+  particleGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+  const particle = new THREE.Points( particleGeometry, particleMaterial );
+
+  //console.log(particle.geometry.attributes.position.array[0])
+  particleGeometry.attributes.position.array[0] = x
+  particleGeometry.attributes.position.array[1] = y
+  particleGeometry.attributes.position.array[2] = z
+  
+  app.scene.add( particle ); 
+}
+
+
 
 // Jitter particles all over the screen
 function moveParticleInRamdomDirection(particle) {
@@ -214,10 +286,31 @@ function moveParticleInRamdomDirection(particle) {
 
 // iterate through every particle and update its location randomly
 function updateParticles() { 
+  
 	for(let i = 0; i < particles.length; i++) {
    
-     moveParticleToGoal(particles[i]);
-    // moveParticleInRamdomDirection(particles[i])
+    // moveParticleToGoal(particles[i]);
+    //let movement = moveParticleToGoal(particles[i]);
+    //console.log(movement)
+
+    //let newPos = particles[i].position.add(movement);
+
+   // particles[i].position.x += 0.001;
+    //particles[i].position.y += movement.y;
+    //particles[i].position.z += movement.z;
+
+
+    
+    const goal = particleGoalMap.get(particles[i]); // get the goal position of the particle
+  
+    //const distance = particles[i].position.distanceTo(goal);
+    //let step = PARTICLE_SPEED * delta;
+    const desired = particles[i].position.sub(goal);
+    let movementVector = desired.normalize();
+    particles[i].position.x += movementVector.x
+
+    //particles[i].position.x +=.0001;
+
 	}
 }
 
@@ -296,7 +389,7 @@ function createDATGUI(){
 
   var gui = new GUI();
 
-  // example rotation of a cube mesh
+  
 
   //const cubeFolder = gui.addFolder('Cube')
   //cubeFolder.add(cube.rotation, 'x', 0, Math.PI * 2)
@@ -328,8 +421,8 @@ const update = () => {
  
   if(delta > interval) {
     
-    //updateParticles();
-    updateCube();
+    updateParticles();
+    //updateCube();
 
     app.controls.update();
     app.renderer.render(app.scene, app.camera);
@@ -344,8 +437,9 @@ function main(){
   
   createParticle();
   createPlane();
+  //moveParticleToGoal(particles[0]);
 
-  createBox();
+  //createBox();
   //createCricle();
   
   update();
