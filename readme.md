@@ -2,7 +2,6 @@
 
 ## Description
 - A three.js test bench for experimenting with three.js features
-    - includes a particle system with randomly moving particles
     - different three.js light types    
     - a simple three.js scene with a cube and a sphere with a ortho camera
 

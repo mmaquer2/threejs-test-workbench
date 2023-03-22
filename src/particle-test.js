@@ -109,6 +109,7 @@ const createParticle = () => {
     const particleGeometry = new THREE.BufferGeometry();
     const particleMaterial = new THREE.PointsMaterial( { color: 0x00AC9F, size: 0.05 } );
     particleGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+    particleGeometry.setAttribute( 'lifespan', new THREE.Float32BufferAttribute( 255));
     
     
     const particle = new THREE.Points( particleGeometry, particleMaterial );
@@ -307,9 +308,9 @@ function updateParticles() {
     //let step = PARTICLE_SPEED * delta;
     const desired = particles[i].position.sub(goal);
     let movementVector = desired.normalize();
-    particles[i].position.x += movementVector.x
-
-    //particles[i].position.x +=.0001;
+    //particles[i].position.x += movementVector.x
+    //particles[i].position.needsUpdate = true;
+    particles[i].position.x +=.01;
 
 	}
 }
@@ -413,6 +414,12 @@ function createDATGUI(){
 }
 
 
+function test(){
+  return "test"
+
+
+}
+
 const update = () => {
   
   requestAnimationFrame(update);
@@ -421,8 +428,35 @@ const update = () => {
  
   if(delta > interval) {
     
-    updateParticles();
+    //updateParticles();
     //updateCube();
+
+    for(let i = 0; i < particles.length; i++) {
+   
+
+      //const goal = particleGoalMap.get(particles[i]); // get the goal position of the particle
+      
+      //const distance = particles[i].position.distanceTo(goal);
+
+      
+        let step = PARTICLE_SPEED * delta;
+
+        console.log(particles[i].geometry.attributes)
+        console.log(particles[i].geometry.attributes.position.array)
+        paritcles[1].opacity -= 0.01;
+
+        if(particles[i].opacity <= 0) {
+          particles[i].dispose();
+        }
+   
+        //particles[i].position.x = Math.sin(delta); // move a particle back and forth
+
+
+        
+   
+      
+      
+    }
 
     app.controls.update();
     app.renderer.render(app.scene, app.camera);
