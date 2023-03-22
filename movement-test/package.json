@@ -1,0 +1,23 @@
+{
+  "name": "threejs-starter-template",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "lil-gui": "^0.18.1",
+    "three": "latest"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.0",
+    "dat.gui": "^0.7.9",
+    "parcel-bundler": "^1.6.1"
+  },
+  "keywords": [
+    "starter",
+    "javascript",
+    "threejs"
+  ]
+}
