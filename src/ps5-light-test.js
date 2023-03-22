@@ -14,7 +14,7 @@ let app = {
   renderer: null,
   camera: null,
   controls:null,
-  light:null,
+
 }
 
 
@@ -35,7 +35,7 @@ const init = () => {
     //app.camera.position.z = 3;
     //app.camera.position.y = 1;
     app.camera.up.set(0, 0, 1)
-    app.camera.position.set(0, -2.8, 0.14);
+    app.camera.position.set(0, -2, -7.5);
     
     // controls 
     app.controls = new OrbitControls( app.camera, app.renderer.domElement );
@@ -47,13 +47,58 @@ const init = () => {
   function createPlane(){
     const planeGeometry = new THREE.PlaneGeometry( 10, 10, 32 );
     const planeMaterial = new THREE.MeshBasicMaterial( {color: "grey", side: THREE.DoubleSide} );
+    planeMaterial.roughness = 0.5;
     const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+
+    plane.rotation.x = - Math.PI * 0.5
+    plane.position.y = - 0.65
+
     plane.receiveShadow = true;
     plane.castShadow = false;
     app.scene.add( plane );
   
   }
   
+
+  function createParticles(){
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const PARTICLE_COUNT = 500;
+    const PARTICLE_SIZE = 0.05;
+    const particles = new Float32Array(PARTICLE_COUNT * 3);
+    for(let i = 0; i < PARTICLE_COUNT * 3; i++){ 
+          particles[i] = (Math.random() - 0.5) * 10;
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particles, 3));
+    const particlesMaterial = new THREE.PointsMaterial({ size: PARTICLE_SIZE}); // color: 0x00AC9F
+
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    app.scene.add(particlesMesh)
+
+  }
+
+
+  function createSpotLight()
+  {
+    const spotLight = new THREE.SpotLight(0x78ff00, 1, 10, Math.PI * 0.1, 0.25, 1);
+    spotLight.position.set(1.5, 0, 1);
+    spotLight.castShadow = true;
+    //spotLight.shadow.mapSize.width = 1024;
+    //spotLight.shadow.mapSize.height = 1024;
+    //spotLight.shadow.camera.near = 0.5;
+    //spotLight.shadow.camera.far = 500;
+    //spotLight.shadow.camera.fov = 30;
+    app.scene.add(spotLight);
+
+
+  }
+
+  function addDirLight(){
+
+    const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
+    app.scene.add(directionalLight)
+  }
 
 
 
@@ -81,6 +126,8 @@ function createDATGUI(){
   }
 
 
+
+
   const update = () => {
   
     requestAnimationFrame(update);
@@ -102,6 +149,8 @@ function main(){
 
     
     createPlane();
+    createParticles();
+    addDirLight();
 
     update();
     createDATGUI();

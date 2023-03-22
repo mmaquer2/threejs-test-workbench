@@ -7,6 +7,7 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "lil-gui": "^0.18.1",
     "three": "latest"
   },
   "devDependencies": {
