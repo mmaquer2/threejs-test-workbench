@@ -17,14 +17,12 @@ const scene = new THREE.Scene()
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-scene.add(ambientLight)
+const spotLight = new THREE.SpotLight(0xFFFF00, 0.5, 10, Math.PI * 0.1, 0.5, 1)
+spotLight.position.set(0, 2, 3)
+scene.add(spotLight)
 
-const pointLight = new THREE.PointLight(0xffffff, 0.5)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
-scene.add(pointLight)
+const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
+scene.add(directionalLight)
 
 /**
  * Objects
@@ -41,7 +39,7 @@ const cube = new THREE.Mesh(
 )
 
 const particlesGeometry = new THREE.BufferGeometry();
-const PARTICLE_COUNT = 500;
+const PARTICLE_COUNT = 5;
 const PARTICLE_SIZE = 0.05;
 const particles = new Float32Array(PARTICLE_COUNT * 3);
 for(let i = 0; i < PARTICLE_COUNT * 3; i++){ 
@@ -54,7 +52,9 @@ const particlesMaterial = new THREE.PointsMaterial({ size: PARTICLE_SIZE}); // c
 const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particlesMesh)
 
-
+const planeMaterial = new THREE.MeshStandardMaterial()
+planeMaterial.roughness = 0.4
+planeMaterial.color = 'white'
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(5, 5),
     material
@@ -62,16 +62,13 @@ const plane = new THREE.Mesh(
 plane.rotation.x = - Math.PI * 0.5
 plane.position.y = - 0.65
 
-const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
-scene.add(directionalLight)
+
 
 scene.add(cube, plane)
 
 
 
-const spotLight = new THREE.SpotLight(0x78ff00, 0.5, 10, Math.PI * 0.1, 0.25, 1)
-spotLight.position.set(0, 2, 3)
-scene.add(spotLight)
+
 
 /**
  * Sizes
@@ -132,6 +129,9 @@ const tick = () =>
    
     cube.rotation.y = 0.1 * elapsedTime
     cube.rotation.x = 0.15 * elapsedTime
+
+    //console.log(particles.length);
+    //console.log(particles[0])
    
     // Update controls
     controls.update()
