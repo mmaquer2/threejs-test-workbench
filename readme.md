@@ -9,17 +9,15 @@
 
 ## Reels and Screenshots
 
-## fireflies 
+### Fireflies Particle System
 ![](https://github.com/mmaquer2/threejs-test-workbench/blob/master/reels/fireflies-reel.gif)
 
 ## Installation and Usage 
 
 ```bash
-
+cd <project folder>
 npm i . 
 npm run dev
-npm run build
-
 ```
 
 
