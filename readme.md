@@ -10,7 +10,7 @@
 ## Reels and Screenshots
 
 ## fireflies 
-![]()
+![](https://github.com/mmaquer2/threejs-test-workbench/blob/master/reels/fireflies-reel.gif)
 
 ## Installation and Usage 
 
