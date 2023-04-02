@@ -7,7 +7,7 @@
     - a simple three.js scene with a cube and a sphere with a ortho camera
     
 
-## Reels and Screenshots
+## Reels 
 
 ### Fireflies Particle System
 ![](https://github.com/mmaquer2/threejs-test-workbench/blob/master/reels/fireflies-reel.gif)
@@ -21,7 +21,7 @@ npm run dev
 ```
 
 
-## Controlling Particle Groups
+### Controlling Particle Groups
 
 ```javascript
 
@@ -92,6 +92,19 @@ for(let i = 0; i < PARTICLECOUNT; i++){
 
 
 ```
+
+### Updating color and material attributes
+
+```javascript
+
+// setting a random color HSL value on each tick
+for each particle i in particles:
+
+    particles[i].material.color.setHSL(0.5 + 0.5 * Math.sin(2 * elapsedTime), 0.75, 0.5);
+
+
+```
+
 
 
 ## Code Snippets

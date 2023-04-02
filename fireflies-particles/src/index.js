@@ -22,6 +22,10 @@ const scene = new THREE.Scene()
 //const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
 //scene.add(directionalLight)
 
+//** volumetric light */
+
+
+
 
 // *** Fireflies Particles ***
 
@@ -58,6 +62,12 @@ const cube = new THREE.Mesh(
     new THREE.BoxGeometry(0.75, 0.75, 0.75),
     material
 )
+
+//var circleGeometry = new THREE.CircleBufferGeometry( 5, 32 );
+//var circleMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+//var circle = new THREE.Mesh( circleGeometry, circleMaterial );
+//circle.scale.set(0.1, 0.1, 0.1)
+//scene.add( circle );
 
 
 const planeMaterial = new THREE.MeshStandardMaterial()
