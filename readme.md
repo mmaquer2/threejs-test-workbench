@@ -12,6 +12,10 @@
 ### Fireflies Particle System
 ![](https://github.com/mmaquer2/threejs-test-workbench/blob/master/reels/fireflies-reel.gif)
 
+### Water Sprinkler Particle System
+![]()
+
+
 ## Installation and Usage 
 
 ```bash
@@ -25,7 +29,7 @@ npm run dev
 
 ```javascript
 
-// the set up of particles can do within a single mesh or several meshes
+// the set up of particles be done within a single mesh or several meshes
 
 // when using several meshes the material attributes of the particle group can be adjusted to control the appearance of the particles individually
 
