@@ -109,3 +109,10 @@ for each particle i in particles:
 
 ## Code Snippets
 - The code snippets are in the `src` folder
+
+
+## Resources and References
+
+- [three.js](https://threejs.org/)
+- [Book of Shaders](https://thebookofshaders.com/)
+- [MIT brownian motion and random walks](https://web.mit.edu/8.334/www/grades/projects/projects17/OscarMickelin/brownian.html)

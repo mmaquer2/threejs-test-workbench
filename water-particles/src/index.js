@@ -21,59 +21,45 @@ const scene = new THREE.Scene()
 const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
 scene.add(directionalLight)
 
-/**
- * Objects
- */
-// Material
-const material = new THREE.MeshStandardMaterial()
-material.roughness = 0.4
-
-// Objects
-
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(0.75, 0.75, 0.75),
-    material
-)
-
-
-const planeMaterial = new THREE.MeshStandardMaterial()
-planeMaterial.roughness = 0.4
-planeMaterial.color = 'white'
-const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(5, 5),
-    material
-)
-
-plane.rotation.x = - Math.PI * 0.5
-plane.position.y = - 0.65
-scene.add(plane)
-
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+scene.add(ambientLight)
 
 
 // *** Particles ***
 
-const PARTICLECOUNT = 10;
+const PARTICLECOUNT = 1000;
 const PARTICLE_SIZE = 0.05;
 
+
 const particles = []
+const velocityMap = new Map();
+
 for(let i = 0; i < PARTICLECOUNT; i++){
-  
-    //const temp = new THREE.Vector3(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5)
-    const temp = new THREE.Vector3(1, 1, 1)
     
+
+   
+    const temp = new THREE.Vector3(0,0,0);
+
+    let dX, dY, dZ;
+    dY = (Math.random() * 5) + 1.5;
+    dX = (Math.random() * 4) - 2;
+    dZ = (Math.random() * 4) - 2;
+    let velocity = new THREE.Vector3(dX, dY, dZ);
+    velocityMap.set(i,velocity); // use the map to set the velocity of each particle
+
     const tempGeometry = new THREE.BufferGeometry();
     tempGeometry.setFromPoints([temp]);
-    const tempMaterial = new THREE.PointsMaterial({ size: PARTICLE_SIZE, color:0xccccff }); 
+    const color = i % 2 == 0 ? 0xccccff : 0x0000ff;
+
+    const tempMaterial = new THREE.PointsMaterial({ size: PARTICLE_SIZE, color:color }); 
     tempMaterial.transparent = true;
     tempMaterial.opacity = 1.0;
+
     const tempMesh = new THREE.Points(tempGeometry, tempMaterial);
     particles.push(tempMesh)
     scene.add(tempMesh)
 
 }
-
-
-
 
 
 
@@ -128,36 +114,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
-
-let parameters = [
-    [
-        [1, 1, 0.5], 5
-    ],
-    [
-        [0.95, 1, 0.5], 4
-    ],
-    [
-        [0.90, 1, 0.5], 3
-    ],
-    [
-        [0.85, 1, 0.5], 2
-    ],
-    [
-        [0.80, 1, 0.5], 1
-    ]
-];
-
-const parameterCount = parameters.length;
-let color = [];
-
-for(let i = 0; i < parameterCount; i++){
-    color = parameters[i][0];
-}
-
-camera.position.set(
-    -0.023216948297360082,
-    1.544302242717219,
-    4.5147816895252655)
+camera.position.set(21.1,14.1,19.09)
 
 
 const tick = () =>
@@ -165,42 +122,37 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
 
     // ==== update objects ====
-
-    //console.log(particles[1].uuid)
-
-    // move a particle back and forth
-    particles[1].position.x = Math.sin(elapsedTime) * 2;
-
-    // setting a random blinking color
-    //particles[1].material.color.setHSL(0.5 + 0.5 * Math.sin(2 * elapsedTime), 0.75, 0.5);
-    let color = parameters[1][0];
-    //console.log(color)
-    let h = (360 * (color[0] + elapsedTime) % 360) / 360;
-    particles[1].material.color.setHSL(h, color[1], color[2]);
-
     console.log(camera.position)
-    //particles[1].material.opacity -= 0.001;
-    //particles[1].material.size += 0.001;
+    for(let i = 0; i < particles.length; i++){
+        // update element postion with its velocity
+        let velocity = velocityMap.get(i);
 
-    /*
-    // removing a particle once opacity is 0
-    if(particles[1].material.opacity <= 0.0){
-        let tempID = particles[1].uuid;
-        particles[1].geometry.dispose();
-        particles[1].material.dispose();
-        console.log("removed paritlces 1")
-        scene.remove(scene.getObjectByProperty('uuid', tempID));
-    }
-    */
+        particles[i].position.x += velocity.x;
+        particles[i].position.y += velocity.y;
+        particles[i].position.z += velocity.z;
 
-    particles[2].position.x += 0.001;
-    particles[2].position.y += 0.001;
+        velocity.y -= 0.05;
 
-    for(let i = 0; i < PARTICLECOUNT; i++){
+        // once the particle hits the ground, reset it the emitter start position and create new velocity
+        if(particles[i].position.y <= 0){
+
+           // reset the particle to the emitter start position
+           particles[i].position.y = 0
+           particles[i].position.x = 0
+           particles[i].position.z = 0;
+
+           // create new velocity
+           velocity.x = (Math.random() * 1) 
+           velocity.y = (Math.random() * 1) 
+           velocity.z = (Math.random() * 1) 
         
+        }
 
+        velocityMap.set(i,velocity) // update the map with the new velocity
 
     }
+    
+    
 
     // Update controls
     controls.update()
