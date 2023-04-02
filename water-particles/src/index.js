@@ -27,7 +27,7 @@ scene.add(ambientLight)
 
 // *** Particles ***
 
-const PARTICLECOUNT = 1000;
+const PARTICLECOUNT = 30000;
 const PARTICLE_SIZE = 0.05;
 
 
@@ -108,7 +108,7 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
+renderer.setClearColor( 0xffffff, 0);
 /**
  * Animate
  */
@@ -121,12 +121,13 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
-    // ==== update objects ====
-    console.log(camera.position)
-    for(let i = 0; i < particles.length; i++){
-        // update element postion with its velocity
-        let velocity = velocityMap.get(i);
+    // ==== update particles ====
 
+    for(let i = 0; i < particles.length; i++){
+        
+        let velocity = velocityMap.get(i); // get the velocity of the particle
+
+        // update element postion with its velocity
         particles[i].position.x += velocity.x;
         particles[i].position.y += velocity.y;
         particles[i].position.z += velocity.z;
