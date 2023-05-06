@@ -2,9 +2,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-/**
- * Base
- */
+
 // Debug
 const gui = new dat.GUI()
 
@@ -14,20 +12,8 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-/**
- * Lights
- */
 
-
-//const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
-//scene.add(directionalLight)
-
-//** volumetric light */
-
-
-
-
-// *** Fireflies Particles ***
+// *** Fireflies Particles *** //
 
 let PARTICLECOUNT = 1000;
 const PARTICLE_SIZE = 0.05;
@@ -35,7 +21,6 @@ const PARTICLE_SIZE = 0.05;
 // note the pure Geometry class is deprecated, so we use BufferGeometry
 const particles = []
 for(let i = 0; i < PARTICLECOUNT; i++){
-  
     const temp = new THREE.Vector3(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5)
     const tempGeometry = new THREE.BufferGeometry();
     tempGeometry.setFromPoints([temp]);
@@ -45,29 +30,17 @@ for(let i = 0; i < PARTICLECOUNT; i++){
     const tempMesh = new THREE.Points(tempGeometry, tempMaterial);
     particles.push(tempMesh)
     scene.add(tempMesh)
-
 }
 
 
-/**
- * Objects
- */
-// Material
 const material = new THREE.MeshStandardMaterial()
 material.roughness = 0.4
 
-// Objects
 
 const cube = new THREE.Mesh(
     new THREE.BoxGeometry(0.75, 0.75, 0.75),
     material
 )
-
-//var circleGeometry = new THREE.CircleBufferGeometry( 5, 32 );
-//var circleMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-//var circle = new THREE.Mesh( circleGeometry, circleMaterial );
-//circle.scale.set(0.1, 0.1, 0.1)
-//scene.add( circle );
 
 
 const planeMaterial = new THREE.MeshStandardMaterial()
@@ -81,13 +54,10 @@ const plane = new THREE.Mesh(
 plane.rotation.x = - Math.PI * 0.5
 plane.position.y = - 0.65
 
-//scene.add(cube)
 scene.add(plane)
 
 
-/**
- * Sizes
- */
+/** Sizes **/
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -108,9 +78,7 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-/**
- * Camera
- */
+/** Camera **/
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
